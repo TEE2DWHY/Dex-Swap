@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import eth from "../assets/images/eth.svg";
-import moralisLogo from "../assets/images/moralis-logo.svg";
+import logo from "../assets/images/logo.webp";
 
 const Header = () => {
   return (
     <>
       <header>
         <div className="leftH">
-          <img src={moralisLogo} alt="logo" className="logo" />
+          <img src={logo} alt="logo" className="logo" />
           <Link to="/">
             <div className="headerItem">Swap</div>
           </Link>
