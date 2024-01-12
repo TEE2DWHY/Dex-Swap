@@ -7,6 +7,7 @@ import Swap from "./components/Swap";
 import Tokens from "./components/Tokens";
 import { useConnect, useAccount } from "wagmi";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
+import Footer from "./components/Footer";
 
 function App() {
   const { address, isConnected } = useAccount();
@@ -32,6 +33,7 @@ function App() {
             </Routes>
           </div>
         </div>
+        <Footer />
       </Router>
     </>
   );
