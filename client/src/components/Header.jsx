@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import eth from "../assets/images/eth.svg";
 import logo from "../assets/images/logo.webp";
 
-const Header = () => {
+const Header = (props) => {
+  const { address, isConnected, connect } = props;
   return (
     <>
       <header>
@@ -20,7 +21,11 @@ const Header = () => {
             <img src={eth} alt="eth-img" className="eth" />
             Ethereum
           </div>
-          <div className="connectButton">Connect</div>
+          <div className="connectButton" onClick={connect}>
+            {isConnected
+              ? address.slice(0, 4) + "..." + address.slice(38)
+              : "Connect"}
+          </div>
         </div>
       </header>
     </>
