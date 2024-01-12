@@ -14,12 +14,12 @@ const getTokenPrice = async (req, res) => {
     const responseTwo = await moralis.EvmApi.token.getTokenPrice({
       address: addressTwo,
     });
-    res.status(200).json({
-      message: {
-        token1: responseOne,
-        token2: responseTwo,
-      },
-    });
+    const usdPrice = {
+      tokenOne: responseOne.raw.usdPrice,
+      tokenTwo: responseTwo.raw.usdPrice,
+      ratio: responseOne.raw.usdPrice / responseTwo.raw.usdPrice,
+    };
+    res.status(200).json(usdPrice);
   } catch (error) {
     res.status(500).json({
       message: "An Error Occurred.",
