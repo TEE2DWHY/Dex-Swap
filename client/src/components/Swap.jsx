@@ -25,6 +25,8 @@ const Swap = (props) => {
       setTokenTwoAmount(null);
     }
   }
+  const [messageApi, contextHolder] = message.useMessage();
+  const [err, setErr] = useState("");
   const [tokenOne, setTokenOne] = useState(tokenList[0]);
   const [tokenTwo, setTokenTwo] = useState(tokenList[1]);
   const [isOpen, setIsOpen] = useState(false);
@@ -43,11 +45,18 @@ const Swap = (props) => {
     },
   });
 
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
+
   async function fetchPrices(one, two) {
     try {
-      const res = await axios.get(`http://localhost:8000/tokens/get-prices`, {
-        params: { addressOne: one, addressTwo: two },
-      });
+      const res = await axios.get(
+        `https://dex-ztgo.onrender.com/tokens/get-prices`,
+        {
+          params: { addressOne: one, addressTwo: two },
+        }
+      );
       setPrices(res.data);
     } catch (error) {
       console.log(error.message);
@@ -55,39 +64,38 @@ const Swap = (props) => {
   }
 
   async function fetchDexSwap() {
-    const allowance = await axios.get(
-      `http://localhost:8000/swap/v5.2/1/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`
-    );
-    console.log(allowance);
-    if (allowance.data.allowance === "0") {
-      const approve = await axios.get(
-        `http://localhost:8000/swap/v5.2/1/approve/transaction?tokenAddress=${tokenOne.address}&amount=${tokenOneAmount}`
+    try {
+      const allowance = await axios.get(
+        `https://dex-ztgo.onrender.com/swap/v5.2/1/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`
       );
-      setTxDetails(approve.data);
-      console.log(txDetails);
+      // console.log(allowance);
+      if (allowance.data.allowance === "0") {
+        const approve = await axios.get(
+          `https://dex-ztgo.onrender.com/swap/v5.2/1/approve/transaction?tokenAddress=${tokenOne.address}`
+        );
+        setTxDetails(approve.data);
+        console.log(txDetails);
+        // console.log("not approved");
+        return;
+      }
+      console.log("make swap");
+      const tx = await axios.get(
+        `https://dex-ztgo.onrender.com/swap/v5.2/1/swap?src=${
+          tokenOne.address
+        }&dst=${tokenTwo.address}&amount=${tokenOneAmount.padEnd(
+          tokenOne.decimals + tokenOneAmount.length,
+          "0"
+        )}&address=${address}&slippage=${slippage}`
+      );
+      let decimals = Number(`1E${tokenTwo.decimals}`);
+      setTokenTwoAmount((Number(tx.data.toTokenAmount) / decimals).toFixed(2));
 
-      // const customGasPrice = "21000";
-      // const approvalResult = await window.ethereum.request({
-      //   method: "eth_sendTransaction",
-      //   params: [{ ...approve.data, from: address, gasPrice: customGasPrice }],
-      // });
-      // console.log("Transaction Hash:", approvalResult);
-      console.log("not approved");
-      return;
+      setTxDetails(tx.data.tx);
+      // console.log(tx.data.tx);
+    } catch (error) {
+      console.log(error);
+      setErr(error.response.data.message);
     }
-    console.log("make swap");
-    const tx = await axios.get(
-      `http://localhost:8000/swap/v5.2/1/swap?src=${tokenOne.address}&dst=${
-        tokenTwo.address
-      }&amount=${tokenOneAmount.padEnd(
-        tokenOne.decimals + tokenOneAmount.length,
-        "0"
-      )}&address=${address}&slippage=${slippage}`
-    );
-    let decimals = Number(`1E${tokenTwo.decimals}`);
-    setTokenTwoAmount((Number(tx.data.toTokenAmount) / decimals).toFixed(2));
-
-    setTxDetails(tx.data.tx);
   }
 
   function switchTokens() {
@@ -135,43 +143,44 @@ const Swap = (props) => {
   useEffect(() => {
     fetchPrices(tokenList[0].address, tokenList[1].address);
   }, []);
-  // useEffect(() => {
-  //   if (txDetails.to && isConnected) {
-  //     sendTransaction();
-  //   }
-  // }, [txDetails]);
+  useEffect(() => {
+    if (txDetails.to && isConnected) {
+      sendTransaction();
+    }
+  }, [txDetails]);
 
-  // useEffect(() => {
-  //   messageApi.destroy();
+  useEffect(() => {
+    messageApi.destroy();
 
-  //   if (isLoading) {
-  //     messageApi.open({
-  //       type: "loading",
-  //       content: "Transaction is Pending...",
-  //       duration: 0,
-  //     });
-  //   }
-  // }, [isLoading]);
+    if (isLoading) {
+      messageApi.open({
+        type: "loading",
+        content: "Transaction is Pending...",
+        duration: 0,
+      });
+    }
+  }, [isLoading]);
 
-  // useEffect(() => {
-  //   messageApi.destroy();
-  //   if (isSuccess) {
-  //     messageApi.open({
-  //       type: "success",
-  //       content: "Transaction Successful",
-  //       duration: 1.5,
-  //     });
-  //   } else if (txDetails.to) {
-  //     messageApi.open({
-  //       type: "error",
-  //       content: "Transaction Failed",
-  //       duration: 1.5,
-  //     });
-  //   }
-  // }, [isSuccess]);
+  useEffect(() => {
+    messageApi.destroy();
+    if (isSuccess) {
+      messageApi.open({
+        type: "success",
+        content: "Transaction Successful",
+        duration: 1.5,
+      });
+    } else if (txDetails.to) {
+      messageApi.open({
+        type: "error",
+        content: "Transaction Failed",
+        duration: 1.5,
+      });
+    }
+  }, [isSuccess]);
 
   return (
     <>
+      {contextHolder}
       <Modal
         open={isOpen}
         footer={null}
@@ -215,7 +224,12 @@ const Swap = (props) => {
             onChange={changeAmount}
             disabled={!prices}
           />
-          <Input placeholder="0" value={tokenTwoAmount} disabled={true} />
+          <Input
+            placeholder="0"
+            value={tokenTwoAmount}
+            disabled={true}
+            type="number"
+          />
           <div className="switchButton" onClick={switchTokens}>
             <ArrowDownOutlined className="switchArrow" />
           </div>
@@ -237,6 +251,7 @@ const Swap = (props) => {
         >
           Swap
         </div>
+        {err && <p className="err">{err}</p>}
       </div>
     </>
   );

@@ -8,16 +8,34 @@ import Tokens from "./components/Tokens";
 import { useConnect, useAccount, useDisconnect } from "wagmi";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import Footer from "./components/Footer";
+// images
+import preloader from "./assets/images/beam-ethereum-icon.gif";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const { address, isConnected } = useAccount();
   const { connect } = useConnect({
     connector: new MetaMaskConnector(),
   });
   const { disconnect } = useDisconnect();
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, [3000]);
+  });
   return (
     <>
       <Router>
+        {isLoading && (
+          <div className="preloader">
+            <img
+              className="preloader-img"
+              src={preloader}
+              alt="preloader-img"
+            />
+          </div>
+        )}
         <div className="app">
           <Header
             connect={connect}

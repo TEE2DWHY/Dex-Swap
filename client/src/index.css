@@ -1,19 +1,13 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
   width: 100vw;
   background-color: rgb(25, 33, 52) !important;
   background: rgb(25, 33, 52);
-  background: linear-gradient(
-    180deg,
-    rgba(25, 33, 52, 1) 28%,
-    rgba(7, 8, 21, 1) 75%
-  );
+  background: linear-gradient(180deg, rgb(35, 46, 72) 28%, rgb(10, 12, 33) 75%);
   color: white;
 }
 
@@ -115,7 +109,12 @@ footer {
   margin-top: 3%;
   text-align: center;
   font-weight: 900;
-  font-style: 14px;
+  font-size: 14px;
+}
+
+.note {
+  font-style: italic;
+  font-size: 12px;
 }
 
 .creator {
@@ -123,7 +122,7 @@ footer {
   text-decoration: underline;
 }
 
-.disable {
+.connectButton[disabled] {
   cursor: not-allowed;
   background-color: #243056;
   padding: 10px;
@@ -134,4 +133,11 @@ footer {
   font-weight: bold;
   transition: 0.3s;
   border: none;
+  font-size: 16px;
+}
+
+@media (max-width: 1200px) {
+  footer {
+    margin-top: 8%;
+  }
 }

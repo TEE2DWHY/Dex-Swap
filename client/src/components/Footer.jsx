@@ -3,11 +3,12 @@ const Footer = () => {
   return (
     <>
       <footer>
-        Created By{" "}
+        Created By
         <a href="https://codewithty.dev" className="creator">
           Tee2dWhy
-        </a>{" "}
+        </a>
         {year}
+        <p className="note">A minimalistic DEX.</p>
       </footer>
     </>
   );

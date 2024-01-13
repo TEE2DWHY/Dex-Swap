@@ -26,13 +26,15 @@ const Header = (props) => {
               ? address.slice(0, 4) + "..." + address.slice(38)
               : "Connect"}
           </div>
+          {/* {isConnected && ( */}
           <button
-            className={!isConnected ? "disable" : "connectButton"}
+            className="connectButton"
             onClick={disconnect}
             disabled={!isConnected}
           >
             Disconnect
           </button>
+          {/* )} */}
         </div>
       </header>
     </>

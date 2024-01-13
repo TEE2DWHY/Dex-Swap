@@ -2,6 +2,22 @@
   text-align: center;
 }
 
+.preloader {
+  position: fixed;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background: #fff;
+}
+
+.preloader-img {
+  width: 200px;
+  height: 200px;
+}
+
 header {
   height: 100px;
   display: flex;
@@ -244,6 +260,11 @@ header {
   background-color: #3b4874;
 }
 
+.err {
+  color: rgb(240, 39, 39);
+  font-size: 12px;
+}
+
 .tokenLogo {
   height: 40px;
   width: 40px;
@@ -283,4 +304,34 @@ header {
   font-size: 13px;
   font-weight: 300;
   color: #51596f;
+}
+
+@media (max-width: 1200px) {
+  .preloader-img {
+    width: 80px;
+    height: 80px;
+    display: block;
+    margin: auto;
+  }
+
+  header {
+    width: 80%;
+    padding: 0 2px;
+  }
+
+  .leftH,
+  .rightH {
+    gap: 2px;
+  }
+
+  .leftH .headerItem {
+    display: none;
+  }
+
+  .tradeBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+  }
 }
