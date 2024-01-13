@@ -1,4 +1,5 @@
 const moralis = require("moralis").default;
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const getTokenPrice = async (req, res) => {
   try {
@@ -24,8 +25,17 @@ const getTokenPrice = async (req, res) => {
     res.status(500).json({
       message: "An Error Occurred.",
     });
-    console.log(error.message);
+    console.log(error);
   }
 };
 
-module.exports = getTokenPrice;
+const proxyMiddleware = createProxyMiddleware({
+  target: "https://api.1inch.dev",
+  changeOrigin: true,
+  onProxyReq: (proxyReq) => {
+    // add API key in Header
+    proxyReq.setHeader("Authorization", `Bearer ${process.env.INCH_KEY}`);
+  },
+});
+
+module.exports = { getTokenPrice, proxyMiddleware };

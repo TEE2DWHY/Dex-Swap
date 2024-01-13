@@ -9,7 +9,7 @@ const tokenRouter = require("./routers/tokens");
 app.use(express.json());
 app.use(cors());
 app.use("/tokens", tokenRouter);
-
+app.use("/", tokenRouter);
 const PORT = process.env.PORT;
 
 moralis
