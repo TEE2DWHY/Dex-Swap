@@ -5,7 +5,7 @@ import "./App.css";
 import Header from "./components/Header";
 import Swap from "./components/Swap";
 import Tokens from "./components/Tokens";
-import { useConnect, useAccount } from "wagmi";
+import { useConnect, useAccount, useDisconnect } from "wagmi";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import Footer from "./components/Footer";
 
@@ -14,6 +14,7 @@ function App() {
   const { connect } = useConnect({
     connector: new MetaMaskConnector(),
   });
+  const { disconnect } = useDisconnect();
   return (
     <>
       <Router>
@@ -22,6 +23,7 @@ function App() {
             connect={connect}
             isConnected={isConnected}
             address={address}
+            disconnect={disconnect}
           />
           <div className="mainWindow">
             <Routes>

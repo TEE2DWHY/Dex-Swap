@@ -3,7 +3,7 @@ import eth from "../assets/images/eth.svg";
 import logo from "../assets/images/logo.webp";
 
 const Header = (props) => {
-  const { address, isConnected, connect } = props;
+  const { address, isConnected, connect, disconnect } = props;
   return (
     <>
       <header>
@@ -26,6 +26,13 @@ const Header = (props) => {
               ? address.slice(0, 4) + "..." + address.slice(38)
               : "Connect"}
           </div>
+          <button
+            className={!isConnected ? "disable" : "connectButton"}
+            onClick={disconnect}
+            disabled={!isConnected}
+          >
+            Disconnect
+          </button>
         </div>
       </header>
     </>
