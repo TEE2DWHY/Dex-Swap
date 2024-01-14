@@ -12,7 +12,7 @@ const Header = (props) => {
           <Link to="/">
             <div className="headerItem">Swap</div>
           </Link>
-          <Link to="/tokens">
+          <Link to="/#">
             <div className="headerItem">Tokens</div>
           </Link>
         </div>

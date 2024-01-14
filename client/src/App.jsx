@@ -15,15 +15,24 @@ import { useEffect, useState } from "react";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const { address, isConnected } = useAccount();
-  const { connect } = useConnect({
+  const { connect, error } = useConnect({
     connector: new MetaMaskConnector(),
   });
+
   const { disconnect } = useDisconnect();
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, [3000]);
   });
+
+  useEffect(() => {
+    if (error && error.message === "Connector not found") {
+      alert("Please Install Metamask In Browser or Open In Dapp Browser");
+      return;
+    }
+  }, [error]);
+
   return (
     <>
       <Router>
