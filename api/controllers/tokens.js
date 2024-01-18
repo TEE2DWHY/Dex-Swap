@@ -76,6 +76,52 @@ const getTokenWalletBalanceBsc = async (req, res) => {
   }
 };
 
+const getTokenWalletBalanceAvax = async (req, res) => {
+  const { address } = req.query;
+  if (!address) {
+    return res.status(401).json({
+      message: "Please Provide User Address",
+    });
+  }
+  try {
+    const response = await moralis.EvmApi.token.getWalletTokenBalances({
+      chain: "0xa86a",
+      address: address,
+    });
+    const data = response.raw.map((token) => {
+      return { contractAddress: token.token_address, symbol: token.symbol };
+    });
+    res.status(200).json({
+      message: data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getTokenWalletBalancePol = async (req, res) => {
+  const { address } = req.query;
+  if (!address) {
+    return res.status(401).json({
+      message: "Please Provide User Address",
+    });
+  }
+  try {
+    const response = await moralis.EvmApi.token.getWalletTokenBalances({
+      chain: "0x89",
+      address: address,
+    });
+    const data = response.raw.map((token) => {
+      return { contractAddress: token.token_address, symbol: token.symbol };
+    });
+    res.status(200).json({
+      message: data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const proxyMiddleware = createProxyMiddleware({
   target: "https://api.1inch.dev",
   changeOrigin: true,
@@ -89,5 +135,7 @@ module.exports = {
   getTokenPrice,
   getTokenWalletBalanceEth,
   getTokenWalletBalanceBsc,
+  getTokenWalletBalanceAvax,
+  getTokenWalletBalancePol,
   proxyMiddleware,
 };
