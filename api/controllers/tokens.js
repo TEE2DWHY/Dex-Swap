@@ -42,12 +42,17 @@ const getTokenWalletBalanceEth = async (req, res) => {
       address: address,
     });
     const data = response.raw.map((token) => {
-      return { contractAddress: token.token_address, symbol: token.symbol };
+      return {
+        contractAddress: token.token_address,
+        symbol: token.symbol,
+        spam: token.possible_spam,
+      };
     });
     res.status(200).json({
-      message: data,
+      message: data.filter((token) => {
+        return token.spam === !true;
+      }),
     });
-    console.log(data);
   } catch (error) {
     console.log(error);
   }
@@ -66,10 +71,16 @@ const getTokenWalletBalanceBsc = async (req, res) => {
       address: address,
     });
     const data = response.raw.map((token) => {
-      return { contractAddress: token.token_address, symbol: token.symbol };
+      return {
+        contractAddress: token.token_address,
+        symbol: token.symbol,
+        spam: token.possible_spam,
+      };
     });
     res.status(200).json({
-      message: data,
+      message: data.filter((token) => {
+        return token.spam === !true;
+      }),
     });
   } catch (error) {
     console.log(error);
@@ -89,10 +100,16 @@ const getTokenWalletBalanceAvax = async (req, res) => {
       address: address,
     });
     const data = response.raw.map((token) => {
-      return { contractAddress: token.token_address, symbol: token.symbol };
+      return {
+        contractAddress: token.token_address,
+        symbol: token.symbol,
+        spam: token.possible_spam,
+      };
     });
     res.status(200).json({
-      message: data,
+      message: data.filter((token) => {
+        return token.spam === !true;
+      }),
     });
   } catch (error) {
     console.log(error);
@@ -112,10 +129,16 @@ const getTokenWalletBalancePol = async (req, res) => {
       address: address,
     });
     const data = response.raw.map((token) => {
-      return { contractAddress: token.token_address, symbol: token.symbol };
+      return {
+        contractAddress: token.token_address,
+        symbol: token.symbol,
+        spam: token.possible_spam,
+      };
     });
     res.status(200).json({
-      message: data,
+      message: data.filter((token) => {
+        return token.spam === !true;
+      }),
     });
   } catch (error) {
     console.log(error);
